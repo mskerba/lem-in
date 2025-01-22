@@ -6,8 +6,51 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <fcntl.h>
+# include <string.h>
+# include <ctype.h>
 
+typedef struct path path;
 
+typedef struct Room {
+    char *name;
+    int x, y;
+    int is_start;
+    int is_end;
+    struct Room **connections;
+    int connection_count;
+    path** included_in;
+    int included_count;
+} Room;
+
+typedef struct Farm {
+    int num_ants;
+    Room **rooms;
+    int room_count;
+} Farm;
+
+typedef struct ant {
+    int id;
+    Room* current_room;
+} ant;
+
+typedef struct path {
+    int id;
+    int steps;
+    Room** rooms;
+    int room_count;
+    int* conflict_with;
+    int conflict_count;
+} path;
+
+//room_ant_utils
+ant* create_ant(int id, Room* start_room);
+void free_room(Room* r);
+
+// parse
+Farm *parse_input(FILE *input);
+void handle_error(const char *message);
+
+// libft
 int			ft_isalpha(int _c);
 int			ft_isdigit(int _c);
 int			ft_isalnum(int _c);
