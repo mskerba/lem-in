@@ -2,7 +2,7 @@
 
 
 int main() {
-    FILE *input = fopen("./src/ant_farm.map", "r");
+    FILE *input = fopen("./maps/ant_farm.map", "r");
     if (!input)
         handle_error("Failed to open input file.");
 
