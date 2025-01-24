@@ -1,4 +1,5 @@
 #include "../includes/lem_in.h"
+#include "../libft/libft.h"
 
 // Error handling function
 void handle_error(const char *message) {
@@ -22,14 +23,14 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     if (!room)
         handle_error("Memory allocation failed for room.");
     
-    char *name = strtok(line, " ");
-    char *x = strtok(NULL, " ");
-    char *y = strtok(NULL, " ");
+    char *name = ft_strtok(line, " ");
+    char *x = ft_strtok(NULL, " ");
+    char *y = ft_strtok(NULL, " ");
     
     if (!name || !x || !y)
         handle_error("Invalid room format.");
     
-    room->name = strdup(name);
+    room->name = ft_strdup(name);
     room->id = id;
     room->x = atoi(x);
     room->y = atoi(y);
@@ -46,8 +47,8 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
 
 // Parse a link between two rooms
 void parse_link(char *line, Farm *farm) {
-    char *room1_name = strtok(line, "-");
-    char *room2_name = strtok(NULL, "\n");
+    char *room1_name = ft_strtok(line, "-");
+    char *room2_name = ft_strtok(NULL, "\n");
 
 
     if (!room1_name || !room2_name) {
@@ -56,10 +57,10 @@ void parse_link(char *line, Farm *farm) {
 
     Room *room1 = NULL, *room2 = NULL;
     for (int i = 0; i < farm->room_count; i++) {
-        if (strcmp(farm->rooms[i]->name, room1_name) == 0){
+        if (ft_strcmp(farm->rooms[i]->name, room1_name) == 0){
             room1 = farm->rooms[i];
         }
-        if (strcmp(farm->rooms[i]->name, room2_name) == 0) {
+        if (ft_strcmp(farm->rooms[i]->name, room2_name) == 0) {
             room2 = farm->rooms[i];
         }
     }
@@ -94,15 +95,16 @@ Farm *parse_input(FILE *input) {
     // Parse rooms and links
     while (getline(&line, &len, input) != -1) {
         if (line[0] == '#') {
-            if (strcmp(line, "##start\n") == 0) {
+            if (ft_strcmp(line, "##start\n") == 0) {
                 is_start = 1;
-            } else if (strcmp(line, "##end\n") == 0) {
+            } else if (ft_strcmp(line, "##end\n") == 0) {
                 is_end = 1;
             }
-        } else if (strchr(line, ' ')) { // Room
+        } else if (ft_strchr(line, ' ')) { // Room
             farm->rooms = realloc(farm->rooms, sizeof(Room *) * (farm->room_count + 1));
-            farm->rooms[farm->room_count++] = parse_room(line, &is_start, &is_end, farm->room_count);
-        } else if (strchr(line, '-')) { // Link
+            farm->rooms[farm->room_count] = parse_room(line, &is_start, &is_end, farm->room_count);
+            farm->room_count++;
+        } else if (ft_strchr(line, '-')) { // Link
             parse_link(line, farm);
         } else {
             handle_error("Invalid input format.");

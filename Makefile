@@ -1,18 +1,29 @@
-CC		=	gcc
-SRCS	=	src/lem_in.c src/room_ant_utils.c src/parse.c  libft/ft_atoi.c libft/ft_isalnum.c libft/ft_isalpha.c libft/ft_isascii.c libft/ft_isdigit.c libft/ft_isprint.c libft/ft_putchar_fd.c libft/ft_putendl_fd.c libft/ft_putnbr_fd.c libft/ft_putstr_fd.c libft/ft_split.c libft/ft_strchr.c libft/ft_strdup.c libft/ft_strjoin.c libft/ft_strlen.c libft/ft_strlcpy.c libft/ft_strlcat.c libft/ft_substr.c libft/ft_tolower.c libft/ft_toupper.c 
-OBJS	= $(SRCS:.c=.o)
-FLAGS	= -Wall -Wextra -Werror
-NAME	= lem-in
+NAME = lem-in
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+SRCS = src/main.c src/room_ant_utils.c src/parse.c
+OBJS = $(SRCS:.c=.o)
 
+LIBFT_DIR = ./libft
+LIBFT = $(LIBFT_DIR)/libft.a
+
+# Targets
 all: $(NAME)
 
-$(NAME): $(OBJS)
-	gcc $(OBJS) -o $(NAME)
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+
+$(LIBFT):
+	@$(MAKE) -C $(LIBFT_DIR)
 
 clean:
-	rm -rf $(OBJS)
+	@$(MAKE) clean -C $(LIBFT_DIR)
+	rm -f $(OBJS)
 
 fclean: clean
+	@$(MAKE) fclean -C $(LIBFT_DIR)
 	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re

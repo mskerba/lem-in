@@ -1,4 +1,5 @@
 #include "../includes/lem_in.h"
+#include "../libft/libft.h"
 
 
 int main() {
