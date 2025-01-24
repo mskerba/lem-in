@@ -17,7 +17,7 @@ int parse_number_of_ants(char *line) {
 }
 
 // Parse a room definition
-Room *parse_room(char *line, int *is_start, int *is_end) {
+Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     Room *room = (Room *)malloc(sizeof(Room));
     if (!room)
         handle_error("Memory allocation failed for room.");
@@ -30,6 +30,7 @@ Room *parse_room(char *line, int *is_start, int *is_end) {
         handle_error("Invalid room format.");
     
     room->name = strdup(name);
+    room->id = id;
     room->x = atoi(x);
     room->y = atoi(y);
     room->is_start = *is_start;
@@ -46,17 +47,21 @@ Room *parse_room(char *line, int *is_start, int *is_end) {
 // Parse a link between two rooms
 void parse_link(char *line, Farm *farm) {
     char *room1_name = strtok(line, "-");
-    char *room2_name = strtok(NULL, "-");
+    char *room2_name = strtok(NULL, "\n");
 
-    if (!room1_name || !room2_name)
+
+    if (!room1_name || !room2_name) {
         handle_error("Invalid link format.");
+    }
 
     Room *room1 = NULL, *room2 = NULL;
     for (int i = 0; i < farm->room_count; i++) {
-        if (strcmp(farm->rooms[i]->name, room1_name) == 0)
+        if (strcmp(farm->rooms[i]->name, room1_name) == 0){
             room1 = farm->rooms[i];
-        if (strcmp(farm->rooms[i]->name, room2_name) == 0)
+        }
+        if (strcmp(farm->rooms[i]->name, room2_name) == 0) {
             room2 = farm->rooms[i];
+        }
     }
 
     if (!room1 || !room2)
@@ -69,7 +74,6 @@ void parse_link(char *line, Farm *farm) {
     room2->connections[room2->connection_count++] = room1;
 }
 
-// Main parser function
 Farm *parse_input(FILE *input) {
     Farm *farm = (Farm *)malloc(sizeof(Farm));
     if (!farm)
@@ -97,7 +101,7 @@ Farm *parse_input(FILE *input) {
             }
         } else if (strchr(line, ' ')) { // Room
             farm->rooms = realloc(farm->rooms, sizeof(Room *) * (farm->room_count + 1));
-            farm->rooms[farm->room_count++] = parse_room(line, &is_start, &is_end);
+            farm->rooms[farm->room_count++] = parse_room(line, &is_start, &is_end, farm->room_count);
         } else if (strchr(line, '-')) { // Link
             parse_link(line, farm);
         } else {

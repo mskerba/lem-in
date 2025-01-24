@@ -13,6 +13,7 @@ typedef struct path path;
 
 typedef struct Room {
     char *name;
+    int id;
     int x, y;
     int is_start;
     int is_end;
@@ -26,21 +27,25 @@ typedef struct Farm {
     int num_ants;
     Room **rooms;
     int room_count;
+    Path **path;
+    int path_count;
 } Farm;
+
+void output(Farm* farm, int* path_id)
 
 typedef struct ant {
     int id;
     Room* current_room;
 } ant;
 
-typedef struct path {
+typedef struct Path {
     int id;
     int steps;
     Room** rooms;
     int room_count;
     int* conflict_with;
     int conflict_count;
-} path;
+} Path;
 
 //room_ant_utils
 ant* create_ant(int id, Room* start_room);
