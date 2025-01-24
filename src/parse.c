@@ -17,6 +17,18 @@ int parse_number_of_ants(char *line) {
     return atoi(line);
 }
 
+int parse_room_coordinate(char *coor) {
+    for (int i = 0; coor[i] && coor[i] != '\n'; i++) {
+
+        if (!i && coor[i] == '-') continue;
+
+        if (!isdigit(coor[i])) {
+            handle_error("Invalid room coordinate.");
+        }
+    }
+    return atoi(coor);
+}
+
 // Parse a room definition
 Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     Room *room = (Room *)malloc(sizeof(Room));
@@ -26,14 +38,19 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     char *name = ft_strtok(line, " ");
     char *x = ft_strtok(NULL, " ");
     char *y = ft_strtok(NULL, " ");
+    char *rest = ft_strtok(NULL, " ");
     
-    if (!name || !x || !y)
+    if (!name || !x || !y || rest)
         handle_error("Invalid room format.");
-    
+
+    if (name[0] == 'L') {
+        handle_error("Invalid room name.");
+    }
+
     room->name = ft_strdup(name);
     room->id = id;
-    room->x = atoi(x);
-    room->y = atoi(y);
+    room->x = parse_room_coordinate(x);
+    room->y = parse_room_coordinate(y);
     room->is_start = *is_start;
     room->is_end = *is_end;
     room->connections = NULL;
@@ -49,6 +66,7 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
 void parse_link(char *line, Farm *farm) {
     char *room1_name = ft_strtok(line, "-");
     char *room2_name = ft_strtok(NULL, "\n");
+
 
 
     if (!room1_name || !room2_name) {
@@ -94,10 +112,11 @@ Farm *parse_input(FILE *input) {
 
     // Parse rooms and links
     while (getline(&line, &len, input) != -1) {
+        line = ft_strtrim(line, " \t\n");
         if (line[0] == '#') {
-            if (ft_strcmp(line, "##start\n") == 0) {
+            if (ft_strcmp(line, "##start") == 0) {
                 is_start = 1;
-            } else if (ft_strcmp(line, "##end\n") == 0) {
+            } else if (ft_strcmp(line, "##end") == 0) {
                 is_end = 1;
             }
         } else if (ft_strchr(line, ' ')) { // Room
