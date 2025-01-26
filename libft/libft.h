@@ -51,5 +51,7 @@ void	ft_putnbr_fd(int nb, int fd);
 void	ft_putstr_fd(char	*s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 char	*ft_strmapi(char const	*s, char (*f)(unsigned int, char));
+char	*ft_get_line(int fd);
+void    *ft_realloc(void *ptr, size_t old_size, size_t new_size);
 
 #endif

@@ -1,14 +1,17 @@
 #include "../includes/lem_in.h"
-#include "../libft/libft.h"
 
 
-int main() {
-    FILE *input = fopen("./maps/ant_farm.map", "r");
-    if (!input)
+int main(int ac, char **av) {
+
+    if (ac != 2)
+        handle_error("Invalid number of arguments.");
+
+    int fd = open(av[1], O_RDONLY);
+    if (fd <= 0)
         handle_error("Failed to open input file.");
 
-    Farm *farm = parse_input(input);
-    fclose(input);
+    Farm *farm = parse_input(fd);
+    close(fd);
 
 
    printf("Number of ants: %d\n", farm->num_ants);
@@ -29,5 +32,12 @@ int main() {
         }
         printf("]\n\n");
     }
+    for (int i = 0; i < farm->room_count; i++) {
+        free(farm->rooms[i]->name);
+        free(farm->rooms[i]->connections);
+        free(farm->rooms[i]);
+    }
+    free(farm->rooms);
+    free(farm);
     return 0;
 }

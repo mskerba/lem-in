@@ -30,12 +30,12 @@ int main() {
 
     distributeAnts(paths, n, ants, result);
 
-    printf("Ant distribution across paths: [");
+    write(1, "Ant distribution across paths: [", 32);
     for (int i = 0; i < n; i++) {
-        printf("%d", result[i]);
-        if (i < n - 1) printf(", ");
+        ft_putnbr_fd(result[i]);
+        if (i < n - 1) write(1, ", ", 2);
     }
-    printf("]\n");
+    write(1, "]\n", 2);
 
     return 0;
 }

@@ -1,6 +1,6 @@
 NAME = lem-in
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 SRCS = src/main.c src/room_ant_utils.c src/parse.c
 OBJS = $(SRCS:.c=.o)
 

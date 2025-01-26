@@ -1,9 +1,10 @@
 #include "../includes/lem_in.h"
-#include "../libft/libft.h"
 
 // Error handling function
 void handle_error(const char *message) {
-    fprintf(stderr, "ERROR: %s\n", message);
+    write(2, "ERROR: ", 7);
+    write(2, message, ft_strlen(message));
+    write(2, "\n", 1);
     exit(EXIT_FAILURE);
 }
 
@@ -86,14 +87,14 @@ void parse_link(char *line, Farm *farm) {
     if (!room1 || !room2)
         handle_error("Link refers to undefined room(s).");
 
-    room1->connections = realloc(room1->connections, sizeof(Room *) * (room1->connection_count + 1));
+    room1->connections = ft_realloc(room1->connections, sizeof(Room *) * room1->connection_count, sizeof(Room *) * (room1->connection_count + 1));
     room1->connections[room1->connection_count++] = room2;
 
-    room2->connections = realloc(room2->connections, sizeof(Room *) * (room2->connection_count + 1));
+    room2->connections = ft_realloc(room2->connections, sizeof(Room *) * room2->connection_count, sizeof(Room *) * (room2->connection_count + 1));
     room2->connections[room2->connection_count++] = room1;
 }
 
-Farm *parse_input(FILE *input) {
+Farm *parse_input(int fd) {
     Farm *farm = (Farm *)malloc(sizeof(Farm));
     if (!farm)
         handle_error("Memory allocation failed for farm.");
@@ -101,35 +102,42 @@ Farm *parse_input(FILE *input) {
     farm->rooms = NULL;
     farm->room_count = 0;
 
+
     char *line = NULL;
-    size_t len = 0;
     int is_start = 0, is_end = 0;
 
     // Parse number of ants
-    if (getline(&line, &len, input) == -1)
-        handle_error("Failed to read input.");
+    line = ft_get_line(fd);
+    if (!line)
+        handle_error("Empty.");
     farm->num_ants = parse_number_of_ants(line);
 
+    free(line);
+
     // Parse rooms and links
-    while (getline(&line, &len, input) != -1) {
+    while ((line = ft_get_line(fd))) {
+        char    *tmp_line = line;
         line = ft_strtrim(line, " \t\n");
+        free(tmp_line);
         if (line[0] == '#') {
             if (ft_strcmp(line, "##start") == 0) {
                 is_start = 1;
             } else if (ft_strcmp(line, "##end") == 0) {
                 is_end = 1;
             }
-        } else if (ft_strchr(line, ' ')) { // Room
-            farm->rooms = realloc(farm->rooms, sizeof(Room *) * (farm->room_count + 1));
+        }
+        else if (ft_strchr(line, ' ')) { // Room
+            farm->rooms = ft_realloc(farm->rooms, sizeof(Room *) * farm->room_count, sizeof(Room *) * (farm->room_count + 1));
             farm->rooms[farm->room_count] = parse_room(line, &is_start, &is_end, farm->room_count);
             farm->room_count++;
-        } else if (ft_strchr(line, '-')) { // Link
+        }
+        else if (ft_strchr(line, '-')) { // Link
             parse_link(line, farm);
         } else {
             handle_error("Invalid input format.");
         }
+        free(line);
     }
 
-    free(line);
     return farm;
 }
