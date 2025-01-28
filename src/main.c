@@ -18,6 +18,8 @@ int main(int ac, char **av) {
 
     // Print all rooms and their details
     printf("Rooms:\n");
+    Room *start_room = NULL;
+    Room *end_room = NULL;
     for (int i = 0; i < farm->room_count; i++) {
         Room *room = farm->rooms[i];
         printf("    Room Name: %s\n", room->name);
@@ -31,8 +33,34 @@ int main(int ac, char **av) {
             printf("%s, ", room->connections[j]->name);
         }
         printf("]\n\n");
+
+        if (room->is_start) start_room = room;
+        if (room->is_end) end_room = room;
     }
+
+    printf("-------------------------------------------------\n\n");
+
+
+    find_disjoint_paths(farm, start_room, end_room);
+
+
+
+
+
+
+
+
+    for (int i = 0; i < farm->paths_count; i++) {
+        free(farm->paths[i]->rooms);
+        free(farm->paths[i]);
+    }
+
+        free(farm->paths);
+
+
+    // cleaning
     for (int i = 0; i < farm->room_count; i++) {
+        if (farm->rooms[i]->included_count) free(farm->rooms[i]->included_in);
         free(farm->rooms[i]->name);
         free(farm->rooms[i]->connections);
         free(farm->rooms[i]);
