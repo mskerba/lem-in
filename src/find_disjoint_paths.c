@@ -7,6 +7,7 @@ Path* create_path(Room** rooms, int length) {
     ft_memcpy(path->rooms, rooms, sizeof(Room*) * length);
     path->length = length;
     path->steps = length;
+    path->ant_count = 0;
     free(rooms);
     return path;
 }

@@ -44,7 +44,7 @@ int main(int ac, char **av) {
     algo(farm);
     printf("paths count :%d\n", farm->paths_count);
     for (int i = 0; i < farm->paths_count; i++) {
-        printf("path_id: %d path_ants: %d\n", farm->paths[i]->steps, farm->paths[i]->ant_count);
+        printf("path_length: %d path_ants: %d\n", farm->paths[i]->length, farm->paths[i]->ant_count);
     }
 
     printf("2222-------------------------------------------------\n\n");

@@ -12,7 +12,15 @@ void algo(Farm *farm) {
         if (ants < ants_sum + i + 1) {
             break;
         }
-        if (paths[i]->steps == s && i + 1 < paths_len) {
+        if (paths[i]->steps == s) {
+            if (i + 1 >= paths_len) {
+                printf("????????????????????\n");
+                int j = (i)?i:1;
+                int tmp = (ants - ants_sum) / j;
+                ants_sum  = tmp * j;
+                s = s + tmp;
+                break;
+            }
             continue;
         }
         temp_ants_sum = (paths[i]->steps - s) * i;
@@ -21,9 +29,9 @@ void algo(Farm *farm) {
         //     break;
         // }
         if (temp_ants_sum + ants_sum <= ants) {
-            printf("******************%d\n", temp_ants_sum);
             ants_sum += temp_ants_sum;
             s = paths[i]->steps;
+            printf("******************%d  %d  %d\n", temp_ants_sum, s, ants_sum);
         } else {
             ants_sum  = (ants - ants_sum);
             s = s + ants_sum;
