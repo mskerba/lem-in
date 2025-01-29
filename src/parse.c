@@ -56,6 +56,8 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     room->is_end = *is_end;
     room->connections = NULL;
     room->connection_count = 0;
+    room->included_in = NULL;
+    room->included_count = 0;
     room->full = false;
 
     *is_start = 0; // Reset after processing
@@ -139,6 +141,10 @@ Farm *parse_input(int fd) {
         }
         free(line);
     }
+
+    farm->paths = NULL;
+    farm->paths_count = 0;
+
 
     return farm;
 }

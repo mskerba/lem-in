@@ -9,19 +9,19 @@
 #include <stdbool.h>
 #include "../libft/libft.h"
 
-typedef struct path path;
+typedef struct Path Path;
 
 typedef struct Room {
-    char *name;
-    int id;
-    int x, y;
-    int is_start;
-    int is_end;
+    char        *name;
+    int         id;
+    int         x, y;
+    int         is_start;
+    int         is_end;
     struct Room **connections;
-    int connection_count;
-    path** included_in;
-    int included_count;
-    bool full ;
+    int         connection_count;
+    Path        **included_in;
+    int         included_count;
+    bool        full;
 } Room;
 
 typedef struct Ant {
@@ -37,7 +37,7 @@ typedef struct Path {
     int     ant_count;
     int     arrived_ants_count;
     Room    **rooms;
-    int     room_count;
+    int     length;
     int     *conflict_with;
     int     conflict_count;
 } Path;
@@ -45,9 +45,9 @@ typedef struct Path {
 typedef struct Farm {
     int     num_ants;
     Room    **rooms;
-    int room_count;
-    Path **path;
-    int path_count;
+    int     room_count;
+    Path    **paths;
+    int     paths_count;
 } Farm;
 
 //room_ant_utils
@@ -57,8 +57,7 @@ void free_room(Room* r);
 // parse
 Farm *parse_input(int fd);
 void handle_error(const char *message);
-
-void		fatal_error(char *str);
+void find_disjoint_paths(Farm* farm, Room* start, Room* end);
 
 //output
 void output(Farm *farm);
