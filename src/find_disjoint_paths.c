@@ -6,6 +6,7 @@ Path* create_path(Room** rooms, int length) {
     path->rooms = (Room**)malloc(sizeof(Room*) * length);
     ft_memcpy(path->rooms, rooms, sizeof(Room*) * length);
     path->length = length;
+    path->steps = length;
     free(rooms);
     return path;
 }

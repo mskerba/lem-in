@@ -36,24 +36,25 @@ int main(int ac, char **av) {
         if (room->is_end) end_room = room;
     }
 
-    printf("-------------------------------------------------\n\n");
 
 
     find_disjoint_paths(farm, start_room, end_room);
 
+    printf("1111-------------------------------------------------\n\n");
+    algo(farm);
+    printf("paths count :%d\n", farm->paths_count);
+    for (int i = 0; i < farm->paths_count; i++) {
+        printf("path_id: %d path_ants: %d\n", farm->paths[i]->steps, farm->paths[i]->ant_count);
+    }
 
-
-
-
-
-
+    printf("2222-------------------------------------------------\n\n");
 
     for (int i = 0; i < farm->paths_count; i++) {
         free(farm->paths[i]->rooms);
         free(farm->paths[i]);
     }
 
-        free(farm->paths);
+    free(farm->paths);
 
 
     // cleaning
@@ -64,15 +65,6 @@ int main(int ac, char **av) {
         free(farm->rooms[i]);
     }
     free(farm->rooms);
-
-    for (int i = 0; i < farm->path_count; i++) {
-        free(farm->path[i]->ants);
-        free(farm->path[i]->rooms);
-        free(farm->path[i]->conflict_with);
-        free(farm->path[i]);
-    }
-    free(farm->path);
-
     free(farm);
     return 0;
 }

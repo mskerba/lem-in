@@ -5,7 +5,7 @@ import pygame
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 ROOM_RADIUS = 20
-ANT_RADIUS = 5
+ANT_RADIUS = 10
 FPS = 60
 
 # Colors
@@ -56,6 +56,23 @@ class Ant:
             return int(x), int(y)
         return self.current_room.x, self.current_room.y
 
+def scale_coordinates(rooms):
+    # Find min and max coordinates
+    min_x = min(room.x for room in rooms.values())
+    max_x = max(room.x for room in rooms.values())
+    min_y = min(room.y for room in rooms.values())
+    max_y = max(room.y for room in rooms.values())
+
+    # Calculate scaling factors
+    padding = 50  # Leave some padding around the edges
+    scale_x = (SCREEN_WIDTH - 2 * padding) / (max_x - min_x) if max_x != min_x else 1
+    scale_y = (SCREEN_HEIGHT - 2 * padding) / (max_y - min_y) if max_y != min_y else 1
+
+    for room in rooms.values():
+        room.x = padding + int((room.x - min_x) * scale_x)
+        room.y = padding + int((room.y - min_y) * scale_y)
+
+
 # Parse input
 def parse_input():
     rooms = {}
@@ -63,6 +80,8 @@ def parse_input():
     movements = []
     num_ants = 0
     current_section = "header"
+    is_start = False
+    is_end = False
 
     for line in sys.stdin:
         line = line.strip()
@@ -70,10 +89,15 @@ def parse_input():
             continue
 
         if line == "##start":
-            current_section = "start"
+            current_section = "rooms"
+            is_start = True
             continue
         elif line == "##end":
-            current_section = "end"
+            current_section = "rooms"
+            is_end = True
+            continue
+        elif line == "##movements":
+            current_section = "movements"
             continue
 
         if current_section == "header":
@@ -91,26 +115,26 @@ def parse_input():
                 if len(parts) == 3:
                     name, x, y = parts
                     x, y = int(x), int(y)
-                    is_start = current_section == "start"
-                    is_end = current_section == "end"
                     rooms[name] = Room(name, x, y, is_start, is_end)
-        elif current_section == "connections":
-            if "-" in line:
-                room1, room2 = line.split("-")
-                connections.append((room1, room2))
-                if room1 in rooms and room2 in rooms:
-                    rooms[room1].connect(rooms[room2])
-                    rooms[room2].connect(rooms[room1])
-            else:
-                current_section = "movements"
+                    is_start = False
+                    is_end = False
+        if current_section == "connections":
+            room1, room2 = line.split("-")
+            connections.append((room1, room2))
+            if room1 in rooms and room2 in rooms:
+                rooms[room1].connect(rooms[room2])
+                rooms[room2].connect(rooms[room1])
+
 
         if current_section == "movements":
             step_movements = []
             for move in line.split():
                 ant_id, target_room = move.split("-")
-                ant_id = int(ant_id[1:])  # Remove "L" prefix
+                ant_id = int(ant_id[1:])
                 step_movements.append((ant_id, target_room))
             movements.append(step_movements)
+
+    scale_coordinates(rooms)
 
     return num_ants, rooms, connections, movements
 
@@ -142,18 +166,27 @@ def visualize(rooms, connections, ants, movements):
             text = font.render(room.name, True, WHITE)
             screen.blit(text, (room.x - ROOM_RADIUS, room.y - ROOM_RADIUS - 10))
 
-        # Update ant positions
+        # # Update ant positions
+        all_arrived = True
         for ant in ants:
             ant.update_position()
+            all_arrived = all_arrived and ant.target_room == None
             ant_x, ant_y = ant.get_position()
             pygame.draw.circle(screen, YELLOW, (ant_x, ant_y), ANT_RADIUS)
 
-        # Process movements
-        if movement_index < len(movements):
+            # Draw the ant's ID in the center of the circle
+            font = pygame.font.SysFont(None, 24)
+            ant_text = font.render(str(ant.id), True, BLACK)
+            text_rect = ant_text.get_rect(center=(ant_x, ant_y))
+            screen.blit(ant_text, text_rect)
+
+        # # Process movements
+        if movement_index < len(movements) and all_arrived:
             current_movements = movements[movement_index]
             for ant_id, target_room_name in current_movements:
                 target_room = rooms[target_room_name]
-                ants[ant_id - 1].move_to(target_room)
+                ant = ants[ant_id - 1]
+                ant.move_to(target_room)
             movement_index += 1
 
         pygame.display.flip()
@@ -161,20 +194,30 @@ def visualize(rooms, connections, ants, movements):
 
     pygame.quit()
 
-# Main function
+
 def main():
     try:
+        # Parse input from standard input
         num_ants, rooms, connections, movements = parse_input()
-        print(num_ants)
-        print(rooms)
-        print(connections)
-        print(movements)
-        start_room = next(room for room in rooms.values() if room.is_start)
-        # ants = [Ant(i + 1, start_room) for i in range(num_ants)]
-        # visualize(rooms, connections, ants, movements)
+
+        # Ensure a start and end room are defined
+        start_room = next((room for room in rooms.values() if room.is_start), None)
+        end_room = next((room for room in rooms.values() if room.is_end), None)
+
+        if not start_room or not end_room:
+            raise ValueError("Start or end room is missing in the input.")
+
+        # Initialize ants in the start room
+        ants = [Ant(i + 1, start_room) for i in range(num_ants)]
+
+
+        # Visualize the simulation
+        visualize(rooms, connections, ants, movements)
+
     except Exception as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
+        print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -1,11 +1,11 @@
 #include "../includes/lem_in.h"
 
 void output(Farm *farm) {
-    Path **paths = farm->path;
-    int path_count = farm->path_count;
+    Path **paths = farm->paths;
+    int paths_count = farm->paths_count;
     int num_ants = farm->num_ants;
 
-    printf("path_count: %d\n", path_count);
+    printf("path_count: %d\n", paths_count);
     printf("num_ants: %d\n", num_ants);
     printf("room_count: %d\n", farm->room_count);
 
@@ -14,7 +14,7 @@ void output(Farm *farm) {
         bool printed = false;
 
         printf("+++++++++++++++++++++++++++\n");
-        for (int i = 0; i < path_count; i++) {
+        for (int i = 0; i < paths_count; i++) {
             Path *path = paths[i];
             Ant **ants = path->ants;
             int ant_count = path->ant_count;
@@ -25,8 +25,8 @@ void output(Farm *farm) {
                 int next_room_id = ants[j]->room_id + 1;
 
                 printf("Ant %d at %s moving to room %d\n", ants[j]->id, ants[j]->current_room->name, next_room_id);
-                if (next_room_id >= path->room_count) 
-                    continue;
+                // if (next_room_id >= path->room_count) 
+                //     continue;
 
                 Room *next_room = rooms[next_room_id];
 

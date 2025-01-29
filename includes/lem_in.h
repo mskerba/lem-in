@@ -62,4 +62,6 @@ void find_disjoint_paths(Farm* farm, Room* start, Room* end);
 //output
 void output(Farm *farm);
 
+void algo(Farm *farm);
+
 #endif
