@@ -1,41 +1,62 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include "../includes/lem_in.h"
 
-void distributeAnts(int paths[], int n, int ants, int result[]) {
-    int antsInPath[n];
-    for (int i = 0; i < n; i++) antsInPath[i] = 0; // change with bzzero
+void output(Farm *farm) {
+    Path **paths = farm->path;
+    int path_count = farm->path_count;
+    int num_ants = farm->num_ants;
 
-    for (int i = 0; i < ants; i++) {
-        int chosenPath = 0;
+    printf("path_count: %d\n", path_count);
+    printf("num_ants: %d\n", num_ants);
+    printf("room_count: %d\n", farm->room_count);
 
-        for (int j = 1; j < n; j++) {
-            if ((paths[chosenPath] + antsInPath[chosenPath]) > (paths[j] + antsInPath[j])) {
-                chosenPath = j;
+    // Main simulation loop
+    while (num_ants > 0) {
+        bool printed = false;
+
+        printf("+++++++++++++++++++++++++++\n");
+        for (int i = 0; i < path_count; i++) {
+            Path *path = paths[i];
+            Ant **ants = path->ants;
+            int ant_count = path->ant_count;
+            Room **rooms = path->rooms;
+
+            printf("Processing Path %d\n", path->id);
+            for (int j = path->arrived_ants_count; j < ant_count; j++) {
+                int next_room_id = ants[j]->room_id + 1;
+
+                printf("Ant %d at %s moving to room %d\n", ants[j]->id, ants[j]->current_room->name, next_room_id);
+                if (next_room_id >= path->room_count) 
+                    continue;
+
+                Room *next_room = rooms[next_room_id];
+
+                // Check room status
+                printf("Next Room Status: full=%d, is_end=%d\n", next_room->full, next_room->is_end);
+                if (next_room->full) 
+                    break;
+
+                // Move the ant to the next room
+                ants[j]->current_room->full = false; // Mark the current room as empty
+                ants[j]->room_id = next_room_id;    // Update room_id
+                ants[j]->current_room = next_room; // Move the ant to the next room
+                // next_room->full = true;            // Mark the next room as full
+
+                // Print movement
+                if (printed) 
+                    printf(" ");
+                printf("L%d-%s", ants[j]->id, next_room->name);
+                printed = true;
+
+                // Check if the ant reached the end
+                printf("--->%d",next_room->is_end);
+                if (next_room->is_end) {
+                    path->arrived_ants_count++;
+                    num_ants--;
+                }
             }
         }
 
-        antsInPath[chosenPath]++;
+        if (printed) 
+            printf("\n");
     }
-
-    for (int i = 0; i < n; i++) {
-        result[i] = antsInPath[i];
-    }
-}
-
-int main() {
-    int paths[] = {1,2,2,4,5,10};
-    int ants = 14;
-    int n = sizeof(paths) / sizeof(paths[0]);
-    int result[n];
-
-    distributeAnts(paths, n, ants, result);
-
-    write(1, "Ant distribution across paths: [", 32);
-    for (int i = 0; i < n; i++) {
-        ft_putnbr_fd(result[i]);
-        if (i < n - 1) write(1, ", ", 2);
-    }
-    write(1, "]\n", 2);
-
-    return 0;
 }

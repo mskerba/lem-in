@@ -1,7 +1,7 @@
 NAME = lem-in
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address
-SRCS = src/main.c src/room_ant_utils.c src/parse.c
+SRCS = src/main.c src/room_ant_utils.c src/parse.c src/output.c
 OBJS = $(SRCS:.c=.o)
 
 LIBFT_DIR = ./libft

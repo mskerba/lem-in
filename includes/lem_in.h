@@ -1,4 +1,3 @@
-
 #ifndef LEMIN_H
 # define LEMIN_H
 
@@ -7,6 +6,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <ctype.h>
+#include <stdbool.h>
 #include "../libft/libft.h"
 
 typedef struct path path;
@@ -21,15 +21,13 @@ typedef struct Room {
     int connection_count;
     path** included_in;
     int included_count;
+    bool full ;
 } Room;
-
-// void output(Farm* farm, int* path_id)
-
-
 
 typedef struct Ant {
     int     id;
     Room    *current_room;
+    int     room_id;
 } Ant;
 
 typedef struct Path {
@@ -61,5 +59,8 @@ Farm *parse_input(int fd);
 void handle_error(const char *message);
 
 void		fatal_error(char *str);
+
+//output
+void output(Farm *farm);
 
 #endif

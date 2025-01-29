@@ -56,6 +56,7 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     room->is_end = *is_end;
     room->connections = NULL;
     room->connection_count = 0;
+    room->full = false;
 
     *is_start = 0; // Reset after processing
     *is_end = 0;
