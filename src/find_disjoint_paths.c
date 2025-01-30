@@ -8,6 +8,7 @@ Path* create_path(Room** rooms, int length) {
     path->length = length;
     path->steps = length;
     path->ant_count = 0;
+    path->arrived_ants_count= 0;
     free(rooms);
     return path;
 }
@@ -88,10 +89,10 @@ void find_disjoint_paths(Farm* farm, Room* start, Room* end) {
         farm->paths[farm->paths_count++] = path;
 
         // Print the path
-        printf("Path %d: ", farm->paths_count);
-        for (int i = 0; i < path->length; i++) {
-            printf("%s ", path->rooms[i]->name);
-        }
-        printf("\n");
+        // printf("Path %d: ", farm->paths_count);
+        // for (int i = 0; i < path->length; i++) {
+        //     printf("%s ", path->rooms[i]->name);
+        // }
+        // printf("\n");
     }
 }

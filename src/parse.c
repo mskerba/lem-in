@@ -113,12 +113,15 @@ Farm *parse_input(int fd) {
     line = ft_get_line(fd);
     if (!line)
         handle_error("Empty.");
+
     farm->num_ants = parse_number_of_ants(line);
+    write(1, line, ft_strlen(line)); 
 
     free(line);
 
     // Parse rooms and links
     while ((line = ft_get_line(fd))) {
+        write(1, line, ft_strlen(line));
         char    *tmp_line = line;
         line = ft_strtrim(line, " \t\n");
         free(tmp_line);
