@@ -6,15 +6,18 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 ROOM_RADIUS = 20
 ANT_RADIUS = 10
+ARRIVED_ANTS = 0
 FPS = 60
 
-# Colors
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
-YELLOW = (255, 255, 0)
+BACKGROUND_COLOR = (38, 50, 56)  # Dark Grey
+START_ROOM_COLOR = (76, 175, 80)  # Bright Green
+END_ROOM_COLOR = (244, 67, 54)    # Bright Red
+INTERMEDIATE_ROOM_COLOR = (33, 150, 243)  # Light Blue
+LINK_COLOR = (176, 190, 197)  # Grey
+ANT_COLOR = (255, 152, 0)     # Orange
+TEXT_COLOR = (255, 255, 255)  # White
+LABEL_COLOR = (0, 188, 212)   # Cyan
+
 
 # Room class
 class Room:
@@ -148,7 +151,7 @@ def visualize(rooms, connections, ants, movements):
     movement_index = 0
     running = True
     while running:
-        screen.fill(BLACK)
+        screen.fill(BACKGROUND_COLOR)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -156,29 +159,38 @@ def visualize(rooms, connections, ants, movements):
 
         # Draw connections
         for room1, room2 in connections:
-            pygame.draw.line(screen, WHITE, (rooms[room1].x, rooms[room1].y), (rooms[room2].x, rooms[room2].y), 2)
+            pygame.draw.line(screen, LINK_COLOR, (rooms[room1].x, rooms[room1].y), (rooms[room2].x, rooms[room2].y), 2)
 
         # Draw rooms
         for room in rooms.values():
-            color = GREEN if room.is_start else RED if room.is_end else BLUE
+            if room.is_start:
+                color = START_ROOM_COLOR
+            elif room.is_end:
+                color = END_ROOM_COLOR
+            else:
+                color = INTERMEDIATE_ROOM_COLOR
             pygame.draw.circle(screen, color, (room.x, room.y), ROOM_RADIUS)
             font = pygame.font.SysFont(None, 24)
-            text = font.render(room.name, True, WHITE)
+            text = font.render(room.name, True, TEXT_COLOR)
             screen.blit(text, (room.x - ROOM_RADIUS, room.y - ROOM_RADIUS - 10))
 
         # # Update ant positions
         all_arrived = True
+        arrived_ants = 0
         for ant in ants:
             ant.update_position()
             all_arrived = all_arrived and ant.target_room == None
             ant_x, ant_y = ant.get_position()
-            pygame.draw.circle(screen, YELLOW, (ant_x, ant_y), ANT_RADIUS)
+            pygame.draw.circle(screen, ANT_COLOR, (ant_x, ant_y), ANT_RADIUS)
 
             # Draw the ant's ID in the center of the circle
-            font = pygame.font.SysFont(None, 24)
-            ant_text = font.render(str(ant.id), True, BLACK)
+            font = pygame.font.SysFont(None, 18)
+            ant_text = font.render(str(ant.id), True, TEXT_COLOR)
             text_rect = ant_text.get_rect(center=(ant_x, ant_y))
             screen.blit(ant_text, text_rect)
+
+            if ant.current_room.is_end and ant.target_room is None:
+                arrived_ants += 1
 
         # # Process movements
         if movement_index < len(movements) and all_arrived:
@@ -188,6 +200,18 @@ def visualize(rooms, connections, ants, movements):
                 ant = ants[ant_id - 1]
                 ant.move_to(target_room)
             movement_index += 1
+
+
+        # Draw labels
+        font = pygame.font.SysFont(None, 24)
+        num_rooms_label = font.render(f"Rooms: {len(rooms)}", True, LABEL_COLOR)
+        total_ants_label = font.render(f"Total Ants: {len(ants)}", True, LABEL_COLOR)
+        arrived_ants_label = font.render(f"Arrived Ants: {arrived_ants}", True, LABEL_COLOR)
+
+        # Position labels
+        screen.blit(num_rooms_label, (10, 10))
+        screen.blit(total_ants_label, (10, 40))
+        screen.blit(arrived_ants_label, (10, 70))
 
         pygame.display.flip()
         clock.tick(FPS)

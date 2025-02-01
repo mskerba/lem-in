@@ -39,7 +39,7 @@ void    output(Farm *farm) {
 
                 if (printed) 
                     write(1, " ", 1);
-                print_ants(ants[j]->id + 1, next_room->name);
+                print_ants(ants[j]->id, next_room->name);
                 printed = true;
 
                 if (next_room->is_end) {
