@@ -41,7 +41,7 @@ class Ant:
         self.target_room = target_room
         self.progress = 0.0
 
-    def update_position(self, speed=0.4):
+    def update_position(self, speed=0.01):
         if self.target_room:
             self.progress += speed
             if self.progress >= 1.0:
