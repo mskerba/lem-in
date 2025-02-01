@@ -37,19 +37,14 @@ void algo(Farm *farm) {
             s = paths[i]->steps;
             // printf("******************%d  %d  %d\n", temp_ants_sum, s, ants_sum);
         } else {
-            // ants_sum  = (ants - ants_sum);
-            // s = s + ants_sum;
-            if (paths[i]->steps != s) {
-
-            }
             int j = (i)?i:1;
             int tmp = (ants - ants_sum) / (j);
-            // printf("\x1b[31m"     "tmp= %d tempsum= %d j= %d antssum = %d"     "\x1b[0m" "\n", tmp, temp_ants_sum , j, ants_sum);
+            // printf("\x1b[33m"     "tmp= %d tempsum= %d j= %d antssum = %d"     "\x1b[0m" "\n", tmp, temp_ants_sum , j, ants_sum);
             
             ants_sum  += tmp * j;
-            int k = ((tmp * j)!= (ants - ants_sum))?1:0;
+            // int k = ((tmp * j)!= (ants - ants_sum))?1:0;
             
-            s = s + tmp + k;
+            s = s + tmp ;
             break;
         }
     }
