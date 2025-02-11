@@ -14,10 +14,10 @@ void algo(Farm *farm) {
         }
         if (paths[i]->steps == s) {
             if (i + 1 >= paths_len) {
-                int j = (i)?i:1;
+                int j = i+ 1;
                 int tmp = (ants - ants_sum) / j;
-                ants_sum  = tmp * j;
-                s = s + tmp;
+                ants_sum  += tmp * j;
+                s = paths[i]->steps + tmp;
                 break;
             }
             continue;
@@ -30,16 +30,16 @@ void algo(Farm *farm) {
             int j = (i)?i:1;
             int tmp = (ants - ants_sum) / (j);
             ants_sum  += tmp * j;
-            
             s = s + tmp ;
             break;
         }
     }
     if (ants - ants_sum >= paths_len) {
         int j = paths_len;
-        int tmp = (ants - ants_sum) / j;
-        ants_sum  = tmp * j;
-        s = s + tmp;
+        int sub = (ants - ants_sum);
+        int tmp = sub / j;
+        ants_sum  += tmp * j;
+        s = paths[paths_len - 1]->steps + tmp;
     }
     temp_ants_sum = 0;
     for (int i = 0; i < paths_len && temp_ants_sum < ants_sum; i++) {
