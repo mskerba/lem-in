@@ -18,9 +18,22 @@ int main(int ac, char **av) {
         if (room->is_end) end_room = room;
     }
 
+    if (farm->num_ants <= 0) {
+        handle_error("The number of ants is missing or invalid (must be a positive integer).");
+    }
+    if (!start_room) {
+        handle_error("The ant farm does not have an start room defined (##start).");
+    }
+    if (!end_room) {
+        handle_error("The ant farm does not have an end room defined (##end).");
+    }
 
 
     find_disjoint_paths(farm, start_room, end_room);
+
+    if (farm->paths_count <= 0) {
+        handle_error("No possible path from start to end.");
+    }
 
     algo(farm);
 
@@ -42,8 +55,6 @@ int main(int ac, char **av) {
             farm->paths[i]->ants[j]->room_id = 0;
         }
     }
-
-    write(1, "##movements\n", 12);
 
     output(farm);
 
