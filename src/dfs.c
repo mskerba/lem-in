@@ -22,10 +22,9 @@ void add_room_to_path(Path *path, Room *room) {
     path->rooms = ft_realloc(path->rooms, path->length* sizeof(Room *), (path->length + 1) * sizeof(Room *));
     path->rooms[path->length] = room;
     path->length++;
-    
+
     room->included_in = ft_realloc(room->included_in, room->included_count * sizeof(int), (room->included_count + 1) * sizeof(int));
-    room->included_in[room->included_count] = path->id;
-    room->included_count++;
+    room->included_in[room->included_count++] = path->id;
 
 }
 
