@@ -72,5 +72,6 @@ void algo(Farm *farm);
 
 //dfs
 void dfs_paths(Farm *farm, Room* start, Room* end);
-
+void    paths_conflict(Farm *farm);
+void sort_paths(Farm *farm) ;
 #endif

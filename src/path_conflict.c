@@ -3,7 +3,10 @@
 
 void    mark_paths_as_conflict(Farm *farm, int path_index, int conflict_with_path_id) {
     Path    *path = farm->paths[path_index];
-    path->conflict_with = ft_realloc(path->conflict_with, path->conflict_count * sizeof(int), (path->conflict_count + 1) * sizeof(int));
+
+    if (!path->conflict_with) {
+        path->conflict_with = malloc(farm->paths_count * sizeof(int) * 10000);
+    }
     path->conflict_with[path->conflict_count] = conflict_with_path_id;
     path->conflict_count++;
 }

@@ -29,52 +29,19 @@ int main(int ac, char **av) {
     }
 
 
-    find_disjoint_paths(farm, start_room, end_room);
+    // find_disjoint_paths(farm, start_room, end_room);
 
-    // dfs_paths(farm, start_room, end_room);
+    dfs_paths(farm, start_room, end_room);
 
+    paths_conflict(farm);
 
-    // for (int i = 0; i < farm->paths_count; i++) {
-    //     printf("\n%d paths->%d\n", farm->paths[i]->id,farm->paths[i]->steps);
-    //     for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
-    //         printf(" %d", farm->paths[i]->conflict_with[j]);
-    //     }
-    //     printf("\n________\n");
-    //     for (int j = 0; j < farm->paths[i]->length; j++) {
-    //         printf(" %s", farm->paths[i]->rooms[j]->name);
-    //     }
-    //     printf("\n");
-    // }
-
-
-    // paths_conflict(farm);
-
-
-    // for (int i = 0; i < farm->paths_count; ++i) {
-    //     printf("\n\npath.id --> %d\n", farm->paths[i]->id);
-
-    //     printf("rooms: ");
-    //     for (int j = 0; j < farm->paths[i]->length; j++) {
-    //         printf("%s ", farm->paths[i]->rooms[j]->name);
-    //     }
-    //     printf("\nconflicts: ");
-    //     for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
-    //         printf("%d ", farm->paths[i]->conflict_with[j]);
-    //     }
-    //     printf("\n");
-    // }
-
-    //    [start]
-    //    / |
-    // [3] [1]--[5]
-    //  |    |   |
-    // [4]--[2] [6]
-    //       | /
-    //     [end]
+    sort_paths(farm);
 
     if (farm->paths_count <= 0) {
         handle_error("No possible path from start to end.");
     }
+
+    
 
     algo(farm);
 

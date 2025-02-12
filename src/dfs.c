@@ -40,7 +40,7 @@ void    fill_included_in(Path *path) {
 void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
     printf("dfs: %s | steps : %d\n", current->name,  path->length);
     if (current == end) {
-        printf("end\n");
+        // printf("end\n");
         farm->paths = ft_realloc(farm->paths, farm->paths_count * sizeof(Path *), (farm->paths_count + 1) * sizeof(Path *));
         farm->paths[farm->paths_count] = path;
         farm->hash_map[path->id] = farm->paths_count;
@@ -49,7 +49,6 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
         return ;
     }
     if (current == start && path->length > 1) {
-        printf("loop\n");
         free(path->rooms);
         free(path);
         return ;
@@ -71,6 +70,8 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
         dfs(next_room, start, end, new_path, farm);
     }
     if (path && path->rooms[path->length - 1]->name != end->name) {
+        // for (int k = 0; k < path->length - 1; k++)
+        //     path->rooms[k]->visited = false; 
         free(path->rooms);
         free(path);
     }
