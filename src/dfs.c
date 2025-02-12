@@ -1,6 +1,6 @@
 #include "../includes/lem_in.h"
 
-Path* create_path1(Room** rooms, int length) {
+Path* create_path1(Farm *farm, Room** rooms, int length) {
     static int new_path_id = 0;
     Path* path = (Path*)malloc(sizeof(Path));
     path->id = new_path_id++;
@@ -12,6 +12,9 @@ Path* create_path1(Room** rooms, int length) {
     path->arrived_ants_count= 0;
     path->conflict_with = NULL;
     path->conflict_count = 0;
+    farm->hash_map = ft_realloc(farm->hash_map, farm->hash_map_count * sizeof(int), (farm->hash_map_count + 1) *sizeof(int));
+    farm->hash_map[path->id] = -1; 
+    farm->hash_map_count++;
     return path;
 }
 
@@ -30,6 +33,7 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
     if (current == end) {
         farm->paths = ft_realloc(farm->paths, farm->paths_count * sizeof(Path *), (farm->paths_count + 1) * sizeof(Path *));
         farm->paths[farm->paths_count] = path;
+        farm->hash_map[path->id] = farm->paths_count;
         farm->paths_count++;
         return ;
     }
@@ -49,7 +53,7 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
             }
         }
         if (cont) continue;
-        Path *new_path = create_path1(path->rooms, path->length);
+        Path *new_path = create_path1(farm, path->rooms, path->length);
         add_room_to_path(new_path, next_room );
         dfs(next_room, start, end, new_path, farm);
     }
@@ -60,7 +64,7 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
 }
 
 void dfs_paths(Farm *farm, Room* start, Room* end) {
-    Path* path = create_path1(&start, 1);
+    Path* path = create_path1(farm, &start, 1);
     dfs(start, start, end, path, farm);
 }
 

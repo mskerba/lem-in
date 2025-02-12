@@ -51,6 +51,8 @@ typedef struct Farm {
     Path    **best_paths;
     int     best_paths_count;
     int     score;
+    int     *hash_map;
+    int     hash_map_count;
 } Farm;
 
 //room_ant_utils

@@ -102,6 +102,8 @@ int main(int ac, char **av) {
         free(farm->rooms[i]->connections);
         free(farm->rooms[i]);
     }
+    if (farm->hash_map_count)
+        free(farm->hash_map);
     free(farm->rooms);
     free(farm);
     return 0;

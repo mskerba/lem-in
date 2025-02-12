@@ -147,6 +147,8 @@ Farm *parse_input(int fd) {
 
     farm->paths = NULL;
     farm->paths_count = 0;
+    farm->hash_map = NULL;
+    farm->hash_map_count = 0;
 
 
     return farm;
