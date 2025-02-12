@@ -46,13 +46,14 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
     for (int i = 0; i < current->connection_count; i++) {
         Room *next_room = current->connections[i];
         bool cont = false;
-        for (int i = 0 ; i < path->length; i++) {
-            if (path->rooms[i]->name == next_room->name) {
+        for (int j = 0 ; j < path->length; j++) {
+            if (path->rooms[j]->name == next_room->name) {
                 cont = true;
                 break;
             }
         }
-        if (cont) continue;
+        if (cont || (next_room->visited && !next_room->is_end)) continue;
+        next_room->visited = true;
         Path *new_path = create_path1(farm, path->rooms, path->length);
         add_room_to_path(new_path, next_room );
         dfs(next_room, start, end, new_path, farm);

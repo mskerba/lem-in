@@ -22,6 +22,7 @@ typedef struct Room {
     int        *included_in;
     int         included_count;
     bool        full;
+    bool        visited;
 } Room;
 
 typedef struct Ant {

@@ -59,6 +59,7 @@ Room *parse_room(char *line, int *is_start, int *is_end, int id) {
     room->included_in = NULL;
     room->included_count = 0;
     room->full = false;
+    room->visited= false;
 
     *is_start = 0; // Reset after processing
     *is_end = 0;
