@@ -1,13 +1,5 @@
 #include "../includes/lem_in.h"
 
-void    mark_paths_as_conflict(Farm *farm, int path_index, int conflict_with_path_id) {
-    Path    *path = farm->paths[path_index];
-    path->conflict_with = ft_realloc(path->conflict_with, path->conflict_count * sizeof(int), (path->conflict_count + 1) * sizeof(int));
-    path->conflict_with[path->conflict_count] = conflict_with_path_id;
-    path->conflict_count++;
-} 
-
-
 int main(int ac, char **av) {
     if (ac != 2)
         handle_error("Invalid number of arguments. Usage: ./lem-in <input_file>");
@@ -37,9 +29,9 @@ int main(int ac, char **av) {
     }
 
 
-    // find_disjoint_paths(farm, start_room, end_room);
+    find_disjoint_paths(farm, start_room, end_room);
 
-    dfs_paths(farm, start_room, end_room);
+    // dfs_paths(farm, start_room, end_room);
 
 
     // for (int i = 0; i < farm->paths_count; i++) {
@@ -55,50 +47,22 @@ int main(int ac, char **av) {
     // }
 
 
-    for (int i = 0; i < farm->room_count; i++) {
-        Room    *room = farm->rooms[i];
-
-        if (room->is_start || room->is_end) {
-            printf("\n|||||| name = %s is_start = %d | is_end %d\n",room->name,  room->is_start, room->is_end);
-            for (int j = 0; j < room->included_count; j++) {
-                printf("\tincluded: %d\n", room->included_in[j]);
-            }
-            printf("|||||\n\n");
-
-            continue;
-        }
-        for (int j = 0; j < room->included_count; j++) {
-            int current_path_id = room->included_in[j];
-            int current_path_index = farm->hash_map[current_path_id];
-
-            if (current_path_index == -1) continue;
-
-            for (int k = j; k < room->included_count; k++) {
-                int path_id = room->included_in[k];
-                int path_index = farm->hash_map[path_id];
-
-                if (path_index == -1 || path_id == current_path_id) continue;
-
-                mark_paths_as_conflict(farm, path_index, current_path_id);
-                mark_paths_as_conflict(farm, current_path_index, path_id);
-            }
-        }
-    }
+    // paths_conflict(farm);
 
 
-    for (int i = 0; i < farm->paths_count; ++i) {
-        printf("\n\npath.id --> %d\n", farm->paths[i]->id);
+    // for (int i = 0; i < farm->paths_count; ++i) {
+    //     printf("\n\npath.id --> %d\n", farm->paths[i]->id);
 
-        printf("rooms: ");
-        for (int j = 0; j < farm->paths[i]->length; j++) {
-            printf("%s ", farm->paths[i]->rooms[j]->name);
-        }
-        printf("\nconflicts: ");
-        for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
-            printf("%d ", farm->paths[i]->conflict_with[j]);
-        }
-        printf("\n");
-    }
+    //     printf("rooms: ");
+    //     for (int j = 0; j < farm->paths[i]->length; j++) {
+    //         printf("%s ", farm->paths[i]->rooms[j]->name);
+    //     }
+    //     printf("\nconflicts: ");
+    //     for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
+    //         printf("%d ", farm->paths[i]->conflict_with[j]);
+    //     }
+    //     printf("\n");
+    // }
 
     //    [start]
     //    / |
@@ -112,7 +76,7 @@ int main(int ac, char **av) {
         handle_error("No possible path from start to end.");
     }
 
-    // algo(farm);
+    algo(farm);
 
     int all_ants = 0;
     for (int i = 0; i < farm->paths_count; i++) {
@@ -133,13 +97,13 @@ int main(int ac, char **av) {
         }
     }
 
-    // output(farm);
+    output(farm);
 
     for (int i = 0; i < farm->paths_count; i++) {
         for (int j = 0; j < farm->paths[i]->ant_count; j++) {
             free(farm->paths[i]->ants[j]);
         }
-        if (farm->paths[i]->conflict_count)
+        if (farm->paths[i]->conflict_with)
             free(farm->paths[i]->conflict_with);
         free(farm->paths[i]->ants);
         free(farm->paths[i]->rooms);

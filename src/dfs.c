@@ -18,25 +18,38 @@ Path* create_path1(Farm *farm, Room** rooms, int length) {
     return path;
 }
 
+
+
 void add_room_to_path(Path *path, Room *room) {
     path->rooms = ft_realloc(path->rooms, path->length* sizeof(Room *), (path->length + 1) * sizeof(Room *));
     path->rooms[path->length] = room;
     path->length++;
-
-    room->included_in = ft_realloc(room->included_in, room->included_count * sizeof(int), (room->included_count + 1) * sizeof(int));
-    room->included_in[room->included_count++] = path->id;
-
 }
 
+void    fill_included_in(Path *path) {
+    for (int i = 0; i < path->length; ++i) {
+        Room    *room = path->rooms[i];
+
+        room->included_in = ft_realloc(room->included_in, room->included_count * sizeof(int), (room->included_count + 1) * sizeof(int));
+        room->included_in[room->included_count++] = path->id;
+
+    }
+}
+
+
 void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
+    printf("dfs: %s | steps : %d\n", current->name,  path->length);
     if (current == end) {
+        printf("end\n");
         farm->paths = ft_realloc(farm->paths, farm->paths_count * sizeof(Path *), (farm->paths_count + 1) * sizeof(Path *));
         farm->paths[farm->paths_count] = path;
         farm->hash_map[path->id] = farm->paths_count;
         farm->paths_count++;
+        fill_included_in(path);
         return ;
     }
     if (current == start && path->length > 1) {
+        printf("loop\n");
         free(path->rooms);
         free(path);
         return ;
@@ -45,15 +58,15 @@ void dfs(Room *current, Room *start, Room *end, Path *path, Farm *farm) {
     for (int i = 0; i < current->connection_count; i++) {
         Room *next_room = current->connections[i];
         bool cont = false;
-        for (int i = 0 ; i < path->length; i++) {
-            if (path->rooms[i]->name == next_room->name) {
+        for (int j = 0 ; j < path->length; j++) {
+            if (path->rooms[j]->name == next_room->name) {
                 cont = true;
                 break;
             }
         }
         if (cont) continue;
         Path *new_path = create_path1(farm, path->rooms, path->length);
-        add_room_to_path(new_path, next_room );
+        add_room_to_path(new_path, next_room);
         dfs(next_room, start, end, new_path, farm);
     }
     if (path && path->rooms[path->length - 1]->name != end->name) {
