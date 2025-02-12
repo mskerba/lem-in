@@ -1,6 +1,6 @@
 #include "../includes/lem_in.h"
 
-void algo(Farm *farm) {
+void    ants_distribute(Farm *farm) {
     int    ants = farm->num_ants;
     Path   **paths = farm->paths;
     int    paths_len = farm->paths_count;
@@ -51,4 +51,46 @@ void algo(Farm *farm) {
         paths[i]->ant_count += 1;
         temp_ants_sum++;
     }
+}
+
+void    best_paths_no_conflicts(Farm *farm) {
+    Path    **paths = farm->paths;
+    int     paths_count = farm->paths_count;
+    Paths   **sauv_paths;
+    int     score = INT_MAX;
+
+    for (int i = 0; i < paths_count; i++) {
+        Paths    **new_paths;
+        int      new_path_count = 0;
+        int      tmp_score = INT_MAX;
+
+        
+        for (int j = i + 1; j < paths_count; j++) {
+            bool is_conflict = false
+            for (int k = 0; k < paths->conflict_count; k++) {
+                for (int l = 0; l < new_path_count; l++) {
+                    if (new_paths[l]->id == paths[j]->conflict_with[k]) {
+                        is_conflict = true;
+                        break;
+                    }
+                }
+            }
+            if (!is_conflict) {
+                new_paths = ft_realloc(new_path, new_path_count * sizeof(Path), (new_path_count + 1) * sizeof(Path));
+                new_path_count++;
+            }
+
+        }
+
+        if (score > tmp_score) {
+            score = tmp_score;
+            sauv_paths = new_paths;
+        } 
+    }
+
+}
+
+void algo(Farm *farm) {
+    best_paths_no_conflicts(farm);
+    // ants_distribute(farm);
 }

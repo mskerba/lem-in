@@ -6,8 +6,9 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <ctype.h>
-#include <stdbool.h>
-#include "../libft/libft.h"
+# include <stdbool.h>
+# include <limits.h>
+# include "../libft/libft.h"
 
 typedef struct Path Path;
 
