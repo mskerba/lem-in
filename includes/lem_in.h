@@ -19,7 +19,7 @@ typedef struct Room {
     int         is_end;
     struct Room **connections;
     int         connection_count;
-    Path        **included_in;
+    int        *included_in;
     int         included_count;
     bool        full;
 } Room;
@@ -48,6 +48,9 @@ typedef struct Farm {
     int     room_count;
     Path    **paths;
     int     paths_count;
+    Path    **best_paths;
+    int     best_paths_count;
+    int     score;
 } Farm;
 
 //room_ant_utils
@@ -63,5 +66,8 @@ void find_disjoint_paths(Farm* farm, Room* start, Room* end);
 void output(Farm *farm);
 
 void algo(Farm *farm);
+
+//dfs
+void dfs_paths(Farm *farm, Room* start, Room* end);
 
 #endif
