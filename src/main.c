@@ -29,22 +29,40 @@ int main(int ac, char **av) {
     }
 
 
-    // find_disjoint_paths(farm, start_room, end_room);
+    find_disjoint_paths(farm, start_room, end_room);
 
-    dfs_paths(farm, start_room, end_room);
+    // dfs_paths(farm, start_room, end_room);
 
 
-    for (int i = 0; i < farm->paths_count; i++) {
-        printf("\n%d paths->%d\n", farm->paths[i]->id,farm->paths[i]->steps);
-        for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
-            printf(" %d", farm->paths[i]->conflict_with[j]);
-        }
-        printf("\n________\n");
-        for (int j = 0; j < farm->paths[i]->length; j++) {
-            printf(" %s", farm->paths[i]->rooms[j]->name);
-        }
-        printf("\n");
-    }
+    // for (int i = 0; i < farm->paths_count; i++) {
+    //     printf("\n%d paths->%d\n", farm->paths[i]->id,farm->paths[i]->steps);
+    //     for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
+    //         printf(" %d", farm->paths[i]->conflict_with[j]);
+    //     }
+    //     printf("\n________\n");
+    //     for (int j = 0; j < farm->paths[i]->length; j++) {
+    //         printf(" %s", farm->paths[i]->rooms[j]->name);
+    //     }
+    //     printf("\n");
+    // }
+
+
+    // paths_conflict(farm);
+
+
+    // for (int i = 0; i < farm->paths_count; ++i) {
+    //     printf("\n\npath.id --> %d\n", farm->paths[i]->id);
+
+    //     printf("rooms: ");
+    //     for (int j = 0; j < farm->paths[i]->length; j++) {
+    //         printf("%s ", farm->paths[i]->rooms[j]->name);
+    //     }
+    //     printf("\nconflicts: ");
+    //     for (int j = 0; j < farm->paths[i]->conflict_count; j++) {
+    //         printf("%d ", farm->paths[i]->conflict_with[j]);
+    //     }
+    //     printf("\n");
+    // }
 
     //    [start]
     //    / |
@@ -58,7 +76,7 @@ int main(int ac, char **av) {
         handle_error("No possible path from start to end.");
     }
 
-    // algo(farm);
+    algo(farm);
 
     int all_ants = 0;
     for (int i = 0; i < farm->paths_count; i++) {
@@ -79,13 +97,13 @@ int main(int ac, char **av) {
         }
     }
 
-    // output(farm);
+    output(farm);
 
     for (int i = 0; i < farm->paths_count; i++) {
         for (int j = 0; j < farm->paths[i]->ant_count; j++) {
             free(farm->paths[i]->ants[j]);
         }
-        if (farm->paths[i]->conflict_count)
+        if (farm->paths[i]->conflict_with)
             free(farm->paths[i]->conflict_with);
         free(farm->paths[i]->ants);
         free(farm->paths[i]->rooms);

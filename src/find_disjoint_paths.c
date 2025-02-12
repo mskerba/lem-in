@@ -9,6 +9,8 @@ Path* create_path(Room** rooms, int length) {
     path->steps = length;
     path->ant_count = 0;
     path->arrived_ants_count= 0;
+    path->conflict_count = 0;
+    path->conflict_with = NULL;
     free(rooms);
     return path;
 }
@@ -24,7 +26,7 @@ void mark_path_as_included(Path *path) {
         Room* room = path->rooms[i];
         if (room->is_start || room->is_end) continue;
         room->included_in = ft_realloc(room->included_in, sizeof(Path*) * room->included_count, sizeof(Path*) * (room->included_count + 1));
-        room->included_in[room->included_count++] = path;
+        room->included_in[room->included_count++] = path->id;
     }
 }
 

@@ -1,7 +1,7 @@
 NAME = lem-in
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -fsanitize=address
-SRCS = src/main.c src/dfs.c src/room_ant_utils.c src/parse.c src/output.c src/algo.c src/find_disjoint_paths.c 
+SRCS = src/main.c src/dfs.c src/path_conflict.c src/room_ant_utils.c src/parse.c src/output.c src/algo.c src/find_disjoint_paths.c 
 OBJS = $(SRCS:.c=.o)
 
 LIBFT_DIR = ./libft
