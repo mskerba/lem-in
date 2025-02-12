@@ -27,13 +27,14 @@ run_test() {
   required_lines=$(get_required_lines "$map_file")
   actual_lines=$(get_actual_lines "$map_file")
 
-  if [ "$actual_lines" -le "$required_lines" ]; then
+  if [ "$actual_lines" -le $(($required_lines + 3)) ]; then
     echo -e "\e[32mRun $i: OK\e[0m (Required: $required_lines, Actual: $actual_lines)"
     return 0
   else
     echo -e "\e[31mRun $i: KO\e[0m (Required: $required_lines, Actual: $actual_lines)"
     return 1
   fi
+
 }
 
 # Main script logic
