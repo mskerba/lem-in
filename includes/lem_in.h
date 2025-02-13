@@ -6,8 +6,9 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <ctype.h>
-#include <stdbool.h>
-#include "../libft/libft.h"
+# include <stdbool.h>
+# include <limits.h>
+# include "../libft/libft.h"
 
 typedef struct Path Path;
 
@@ -19,9 +20,10 @@ typedef struct Room {
     int         is_end;
     struct Room **connections;
     int         connection_count;
-    Path        **included_in;
+    int        *included_in;
     int         included_count;
     bool        full;
+    bool        visited;
 } Room;
 
 typedef struct Ant {
@@ -48,6 +50,9 @@ typedef struct Farm {
     int     room_count;
     Path    **paths;
     int     paths_count;
+    Path    **best_paths;
+    int     best_paths_count;
+    int     score;
 } Farm;
 
 //room_ant_utils
