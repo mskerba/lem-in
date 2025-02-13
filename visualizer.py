@@ -76,7 +76,6 @@ def scale_coordinates(rooms):
         room.y = padding + int((room.y - min_y) * scale_y)
 
 
-# Parse input
 def parse_input():
     rooms = {}
     connections = []

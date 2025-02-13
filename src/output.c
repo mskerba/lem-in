@@ -13,6 +13,9 @@ void    output(Farm *farm) {
     int paths_count = farm->paths_count;
     int num_ants = farm->num_ants;
 
+
+    write(1, "##movements\n", 12);
+
     while (num_ants > 0) {
         bool printed = false;
 

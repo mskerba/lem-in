@@ -87,12 +87,5 @@ void find_disjoint_paths(Farm* farm, Room* start, Room* end) {
         mark_path_as_included(path);
         farm->paths = ft_realloc(farm->paths, sizeof(Path*) * farm->paths_count, sizeof(Path*) * (farm->paths_count + 1));
         farm->paths[farm->paths_count++] = path;
-
-        // Print the path
-        // printf("Path %d: ", farm->paths_count);
-        // for (int i = 0; i < path->length; i++) {
-        //     printf("%s ", path->rooms[i]->name);
-        // }
-        // printf("\n");
     }
 }
